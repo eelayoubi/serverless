@@ -8,13 +8,20 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent implements OnInit {
   name: string;
+  salutation: string;
+  private api = '-----------------'
   constructor(private http: HttpClient) {
   }
   ngOnInit() {
-    this.http.get('-----')
+    this.http.get(`${this.api}hello`)
       .subscribe((data: any) => {
         console.log('data: ', data)
-        this.name = data?.message
+        this.salutation = data?.message
+      });
+      this.http.get(`${this.api}get-name`)
+      .subscribe((data: any) => {
+        console.log('data: ', data)
+        this.name = data?.Item.name
       });
   }
 }

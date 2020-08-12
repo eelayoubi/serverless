@@ -21,6 +21,35 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+  GetNameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetNameFunction
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Policies: AmazonDynamoDBReadOnlyAccess
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: DynamoDBTable
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /get-name
+            Method: get
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
 Outputs:
   HelloWorldApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
