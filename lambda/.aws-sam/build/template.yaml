@@ -38,7 +38,36 @@ Resources:
           Properties:
             Path: /get-name
             Method: get
+  InsertTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: InsertTodoFunction
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TodosTable
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /add-todo
+            Method: post
   DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  TodosTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:

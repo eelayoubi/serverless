@@ -1,10 +1,10 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   backend
 
   Sample SAM Template for backend
-  
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -41,16 +41,47 @@ Resources:
             Path: /get-name
             Method: get
 
+  InsertTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: insert-todo/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TodosTable
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /add-todo
+            Method: post
+
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
+    Properties:
+      AttributeDefinitions:
         - AttributeName: "id"
           AttributeType: "S"
-      KeySchema: 
+      KeySchema:
         - AttributeName: "id"
           KeyType: HASH
-      ProvisionedThroughput: 
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  TodosTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
