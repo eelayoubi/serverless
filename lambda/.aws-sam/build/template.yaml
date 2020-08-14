@@ -55,6 +55,40 @@ Resources:
           Properties:
             Path: /add-todo
             Method: post
+  UpdateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: UpdateTodoFunction
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TodosTable
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /update-todo/{id}
+            Method: put
+  DeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: DeleteTodoFunction
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: TodosTable
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /delete-todo/{id}
+            Method: delete
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:

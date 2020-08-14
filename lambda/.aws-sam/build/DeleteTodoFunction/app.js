@@ -1,7 +1,6 @@
 // const axios = require('axios')
 // const url = 'http://checkip.amazonaws.com/';
-const AWS = require('aws-sdk')
-const { v4: uuidv4 } = require('uuid');
+const AWS = require('aws-sdk');
 AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' })
 const documentClient = new AWS.DynamoDB.DocumentClient()
 const TableName = process.env.TABLE_NAME
@@ -21,18 +20,14 @@ let response;
  */
 exports.lambdaHandler = async (event, context) => {
     try {
-        const body = JSON.parse(event.body);
-        const taskID = uuidv4()
+        const taskId = event.pathParameters.id;
         const params = {
-            Item: {
-                id: taskID,
-                task: body.task,
-                done: body.done,
-                createdAt: body.createdAt
+            Key: {
+                "id": taskId
             },
             TableName
         };
-        const result = await documentClient.put(params).promise();
+        await documentClient.delete(params).promise();
         response = {
             'statusCode': 200,
             headers: {
