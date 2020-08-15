@@ -26,7 +26,7 @@ exports.lambdaHandler = async (event, context) => {
             },
             TableName
         };
-        await documentClient.get(params).promise();
+        const result = await documentClient.get(params).promise();
         response = {
             'statusCode': 200,
             headers: {

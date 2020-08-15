@@ -11,6 +11,17 @@ Globals:
     Timeout: 3
 
 Resources:
+
+  ToDoAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+      Auth:
+        Authorizers:
+          MyCognitoAuthorizer:
+            UserPoolArn: arn:aws:cognito-idp:us-east-1:381380966612:userpool/us-east-1_YoJyuXsXY
+
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -18,11 +29,12 @@ Resources:
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+        Root:
+          Type: Api
           Properties:
+            RestApiId: !Ref ToDoAPI
             Path: /hello
-            Method: get
+            Method: GET
 
   GetNameFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -35,11 +47,12 @@ Resources:
         Variables:
           TABLE_NAME: !Ref DynamoDBTable
       Events:
-        HelloWorld:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+        Root:
+          Type: Api
           Properties:
+            RestApiId: !Ref ToDoAPI
             Path: /get-name
-            Method: get
+            Method: GET
 
   InsertTodoFunction:
     Type: AWS::Serverless::Function
@@ -53,11 +66,12 @@ Resources:
           TABLE_NAME:
             Ref: TodosTable
       Events:
-        HelloWorld:
+        Root:
           Type: Api
           Properties:
+            RestApiId: !Ref ToDoAPI
             Path: /add-todo
-            Method: post
+            Method: POST
 
   UpdateTodoFunction:
     Type: AWS::Serverless::Function
@@ -71,11 +85,12 @@ Resources:
           TABLE_NAME:
             Ref: TodosTable
       Events:
-        HelloWorld:
+        Root:
           Type: Api
           Properties:
+            RestApiId: !Ref ToDoAPI
             Path: /update-todo/{id}
-            Method: put
+            Method: PUT
 
   DeleteTodoFunction:
     Type: AWS::Serverless::Function
@@ -89,11 +104,14 @@ Resources:
           TABLE_NAME:
             Ref: TodosTable
       Events:
-        HelloWorld:
+        Root:
           Type: Api
           Properties:
+            RestApiId: !Ref ToDoAPI
             Path: /delete-todo/{id}
-            Method: delete
+            Method: DELETE
+            Auth:
+              Authorizer: MyCognitoAuthorizer
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
@@ -125,9 +143,9 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+  # HelloWorldApi:
+  #   Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    # Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
   HelloWorldFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
