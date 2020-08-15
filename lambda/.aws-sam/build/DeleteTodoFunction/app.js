@@ -1,9 +1,9 @@
 // const axios = require('axios')
 // const url = 'http://checkip.amazonaws.com/';
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' })
-const documentClient = new AWS.DynamoDB.DocumentClient()
-const TableName = process.env.TABLE_NAME
+AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' });
+const documentClient = new AWS.DynamoDB.DocumentClient();
+const TableName = process.env.TABLE_NAME;
 let response;
 
 /**
