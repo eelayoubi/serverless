@@ -9,6 +9,23 @@ Globals:
   Function:
     Timeout: 3
 Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: ThemeParkUserPool
+      MfaConfiguration: 'OFF'
+      Schema:
+      - Name: email
+        AttributeDataType: String
+        Mutable: false
+        Required: true
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: todo-client-app
+      GenerateSecret: false
+      UserPoolId:
+        Ref: UserPool
   ToDoAPI:
     Type: AWS::Serverless::Api
     Properties:
@@ -17,7 +34,10 @@ Resources:
       Auth:
         Authorizers:
           MyCognitoAuthorizer:
-            UserPoolArn: arn:aws:cognito-idp:us-east-1:381380966612:userpool/us-east-1_YoJyuXsXY
+            UserPoolArn:
+              Fn::GetAtt:
+              - UserPool
+              - Arn
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:

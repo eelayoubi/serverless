@@ -9,7 +9,8 @@ import { HttpClient } from '@angular/common/http';
 export class AppComponent implements OnInit {
   name: string;
   salutation: string;
-  private api = '-----------------'
+  private api = ''
+
   constructor(private http: HttpClient) {
   }
   ngOnInit() {
