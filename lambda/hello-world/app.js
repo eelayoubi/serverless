@@ -26,11 +26,11 @@ exports.lambdaHandler = async (event, context) => {
                 message: 'hello world',
                 // location: ret.data.trim()
             })
-        }
+        };
     } catch (err) {
         console.log(err);
         return err;
     }
 
-    return response
+    return response;
 };

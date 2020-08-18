@@ -11,6 +11,13 @@ Globals:
     Timeout: 3
 
 Resources:
+  ToDosRealtime:
+    Type: "AWS::IoT::Thing"
+    Properties:
+      ThingName: "todos-realtime"
+      AttributePayload: 
+        Attributes: {}  
+
   UserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:

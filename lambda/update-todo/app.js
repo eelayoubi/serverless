@@ -38,11 +38,11 @@ exports.lambdaHandler = async (event, context) => {
                 "Access-Control-Allow-Origin": "*"
             },
             'body': JSON.stringify("it was a success ...")
-        }
+        };
     } catch (err) {
         console.log(err);
         return err;
     }
 
-    return response
+    return response;
 };

@@ -44,5 +44,5 @@ exports.lambdaHandler = async (event, context) => {
         return err;
     }
 
-    return response
+    return response;
 };
