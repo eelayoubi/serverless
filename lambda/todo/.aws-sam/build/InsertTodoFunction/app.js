@@ -1,6 +1,7 @@
 // const axios = require('axios')
 // const url = 'http://checkip.amazonaws.com/';
 const AWS = require('aws-sdk');
+const { v4: uuidv4 } = require('uuid');
 AWS.config.update({ region: process.env.AWS_REGION || 'us-east-1' });
 const documentClient = new AWS.DynamoDB.DocumentClient();
 const TableName = process.env.TABLE_NAME;
@@ -20,11 +21,11 @@ let response;
  */
 exports.lambdaHandler = async (event, context) => {
     try {
-        const taskId = event.pathParameters.id;
         const body = JSON.parse(event.body);
+        const taskID = uuidv4()
         const params = {
             Item: {
-                id: taskId,
+                id: taskID,
                 task: body.task,
                 done: body.done,
                 createdAt: body.createdAt
@@ -38,7 +39,7 @@ exports.lambdaHandler = async (event, context) => {
                 "Access-Control-Allow-Origin": "*"
             },
             'body': JSON.stringify("it was a success ...")
-        }
+        };
     } catch (err) {
         console.log(err);
         return err;

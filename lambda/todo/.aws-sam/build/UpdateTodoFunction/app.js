@@ -20,24 +20,29 @@ let response;
  */
 exports.lambdaHandler = async (event, context) => {
     try {
+        const taskId = event.pathParameters.id;
+        const body = JSON.parse(event.body);
         const params = {
-            Key: {
-                "id": "1"
+            Item: {
+                id: taskId,
+                task: body.task,
+                done: body.done,
+                createdAt: body.createdAt
             },
             TableName
         };
-        const result = await documentClient.get(params).promise();
+        await documentClient.put(params).promise();
         response = {
             'statusCode': 200,
             headers: {
                 "Access-Control-Allow-Origin": "*"
             },
-            'body': JSON.stringify(result)
-        }
+            'body': JSON.stringify("it was a success ...")
+        };
     } catch (err) {
         console.log(err);
         return err;
     }
 
-    return response
+    return response;
 };
